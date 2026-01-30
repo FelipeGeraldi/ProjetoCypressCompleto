@@ -1,0 +1,9 @@
+# Node modules
+node_modules/
+
+# Cypress screenshots and videos
+cypress/screenshots/
+cypress/videos/
+
+# Cypress local env (não versionar credenciais)
+cypress.env.json
