@@ -135,6 +135,9 @@ Valida:
 
 Inclui checks **opcionais (skip)** para hardening (HSTS e CSP).
 
+> **Hardening (HSTS/CSP)**: estes checks agora rodam por padrão em modo **não-estrito** (não quebram o run se o header estiver ausente; apenas logam).  
+> Para tornar **estrito** e falhar caso os headers não existam, defina `STRICT_SECURITY_HEADERS=true` no `cypress.env.json`.
+
 ### `login.performance.cy.js` — Performance (budgets)
 
 Arquivo: `cypress/e2e/login.performance.cy.js`

@@ -15,6 +15,27 @@ function assertNoSecretInStorage(secret) {
   });
 }
 
+function assertHeaderIfStrict(response, headerName, label) {
+  const strict = Cypress.env('STRICT_SECURITY_HEADERS') === true;
+  const value = response?.headers?.[headerName];
+
+  if (strict) {
+    expect(value, `${label} (${headerName})`).to.be.a('string').and.not.be.empty;
+    return;
+  }
+
+  // Modo não-estrito: não falha o build por hardening ausente, apenas evidencia no log.
+  if (!value) {
+    Cypress.log({
+      name: 'SEC',
+      message: `Header ausente (não-estrito): ${headerName}`,
+    });
+    return;
+  }
+
+  expect(value, `${label} (${headerName})`).to.be.a('string').and.not.be.empty;
+}
+
 describe('Login — segurança (checks básicos)', () => {
   beforeEach(() => {
     cy.visitLogin();
@@ -57,12 +78,16 @@ describe('Login — segurança (checks básicos)', () => {
 });
 
 describe('Login — hardening recomendado (opcional)', () => {
-  it.skip('SEC-H-001 — Resposta deveria incluir Strict-Transport-Security (HSTS)', () => {
-    cy.request('/login').its('headers').should('have.property', 'strict-transport-security');
+  it('SEC-H-001 — Resposta deveria incluir Strict-Transport-Security (HSTS)', () => {
+    cy.request({ url: '/login', failOnStatusCode: false }).then((resp) => {
+      assertHeaderIfStrict(resp, 'strict-transport-security', 'HSTS');
+    });
   });
 
-  it.skip('SEC-H-002 — Resposta deveria incluir Content-Security-Policy (CSP)', () => {
-    cy.request('/login').its('headers').should('have.property', 'content-security-policy');
+  it('SEC-H-002 — Resposta deveria incluir Content-Security-Policy (CSP)', () => {
+    cy.request({ url: '/login', failOnStatusCode: false }).then((resp) => {
+      assertHeaderIfStrict(resp, 'content-security-policy', 'CSP');
+    });
   });
 });
 

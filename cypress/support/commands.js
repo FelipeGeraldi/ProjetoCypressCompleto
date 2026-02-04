@@ -64,10 +64,14 @@ Cypress.Commands.add('submitLogin', () => {
 
 /**
  * Login via UI usando credenciais fornecidas pelo ambiente:
- * - CYPRESS_USER_EMAIL
- * - CYPRESS_USER_PASSWORD
+ * - USER_EMAIL
+ * - USER_PASSWORD
  */
-Cypress.Commands.add('loginUi', (email, password) => {
+Cypress.Commands.add('loginUi', (email = Cypress.env('USER_EMAIL'), password = Cypress.env('USER_PASSWORD')) => {
+  if (!email || !password) {
+    throw new Error('Credenciais ausentes: defina USER_EMAIL e USER_PASSWORD no cypress.env.json (ou passe por parâmetro).');
+  }
+
   cy.visitLogin();
   cy.fillLoginEmail(email);
   cy.fillLoginPassword(password);

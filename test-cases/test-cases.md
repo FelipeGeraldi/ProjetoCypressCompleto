@@ -1,15 +1,17 @@
 # Casos de Teste — Login
 
+> **Credenciais**: não manter usuário/senha em texto aqui. Para executar cenários que exigem login com sucesso, usar `USER_EMAIL` e `USER_PASSWORD` no `cypress.env.json` (ignorado pelo git).
+
 | ID | Cenário | Pré-condições | Passos | Resultado Esperado | Resultado Obtido | Prioridade |
 | --- | --- | --- | --- | --- | --- | --- |
-| TC00001 | Login com credenciais válidas | Usuário existente e ativo; acesso ao ambiente de testes | 1. Acessar a página de Login<br>2. Informar e-mail válido cadastrado<br>3. Informar senha válida<br>4. Clicar em **Acessar** | Usuário autenticado com sucesso e redirecionado para a área logada | N/A (a ser executado) | Alta |
-| TC00002 | Login com senha inválida | Usuário existente e ativo | 1. Acessar a página de Login<br>2. Informar e-mail válido cadastrado<br>3. Informar uma senha inválida<br>4. Clicar em **Acessar** | Exibir mensagem de erro de autenticação; usuário não deve ser autenticado; permanecer na tela de Login | N/A (a ser executado) | Alta |
+| TC00001 | Login com credenciais válidas | Usuário existente e ativo (**via** `USER_EMAIL`/`USER_PASSWORD`) | 1. Acessar a página de Login<br>2. Informar e-mail (`USER_EMAIL`)<br>3. Informar senha (`USER_PASSWORD`)<br>4. Clicar em **Acessar** | Usuário autenticado com sucesso e redirecionado para a área logada | N/A (a ser executado) | Alta |
+| TC00002 | Login com senha inválida | Usuário existente e ativo (**via** `USER_EMAIL`) | 1. Acessar a página de Login<br>2. Informar e-mail (`USER_EMAIL`)<br>3. Informar uma senha inválida (diferente da real)<br>4. Clicar em **Acessar** | Exibir mensagem de erro de autenticação; usuário não deve ser autenticado; permanecer na tela de Login | N/A (a ser executado) | Alta |
 | TC00003 | Login com e-mail não cadastrado | Nenhuma | 1. Acessar a página de Login<br>2. Informar um e-mail não cadastrado<br>3. Informar qualquer senha<br>4. Clicar em **Acessar** | Exibir mensagem de erro de autenticação (sem revelar se o e-mail existe); usuário não deve ser autenticado | N/A (a ser executado) | Alta |
 | TC00004 | Tentativa de login com e-mail em formato inválido | Nenhuma | 1. Acessar a página de Login<br>2. Informar e-mail em formato inválido (ex.: `felipe@`)<br>3. Informar qualquer senha<br>4. Clicar em **Acessar** | Bloquear envio e/ou exibir validação de e-mail inválido; não autenticar | N/A (a ser executado) | Média |
 | TC00005 | Tentativa de login sem preencher e-mail e senha | Nenhuma | 1. Acessar a página de Login<br>2. Não preencher e-mail<br>3. Não preencher senha<br>4. Clicar em **Acessar** | Exibir validações obrigatórias para e-mail e senha; não autenticar | N/A (a ser executado) | Alta |
 | TC00006 | Tentativa de login com e-mail preenchido e senha vazia | Nenhuma | 1. Acessar a página de Login<br>2. Informar um e-mail (qualquer)<br>3. Deixar a senha vazia<br>4. Clicar em **Acessar** | Exibir validação de campo obrigatório para senha; não autenticar | N/A (a ser executado) | Alta |
 | TC00007 | Tentativa de login com senha preenchida e e-mail vazio | Nenhuma | 1. Acessar a página de Login<br>2. Deixar o e-mail vazio<br>3. Informar uma senha (qualquer)<br>4. Clicar em **Acessar** | Exibir validação de campo obrigatório para e-mail; não autenticar | N/A (a ser executado) | Alta |
-| TC00008 | Remoção de espaços em branco (trim) no e-mail | Usuário existente e ativo | 1. Acessar a página de Login<br>2. Informar e-mail válido com espaços antes/depois (ex.: `  usuario@dominio.com  `)<br>3. Informar senha válida<br>4. Clicar em **Acessar** | E-mail deve ser tratado (trim) e permitir login; autenticar com sucesso | N/A (a ser executado) | Média |
+| TC00008 | Remoção de espaços em branco (trim) no e-mail | Usuário existente e ativo (**via** `USER_EMAIL`/`USER_PASSWORD`) | 1. Acessar a página de Login<br>2. Informar e-mail com espaços antes/depois: `  USER_EMAIL  `<br>3. Informar senha (`USER_PASSWORD`)<br>4. Clicar em **Acessar** | E-mail deve ser tratado (trim) e permitir login; autenticar com sucesso | N/A (a ser executado) | Média |
 | TC00009 | Campo senha deve mascarar caracteres digitados | Nenhuma | 1. Acessar a página de Login<br>2. Digitar qualquer senha no campo **Senha** | O campo deve exibir caracteres mascarados (ex.: `•`/`*`) e não texto em claro | N/A (a ser executado) | Média |
 | TC00010 | Link “Esqueceu a senha?” deve ser acionável | Nenhuma | 1. Acessar a página de Login<br>2. Clicar em **Esqueceu a senha?** | Deve navegar para fluxo/página de recuperação ou exibir comportamento esperado (modal/redirect) sem erro | N/A (a ser executado) | Baixa |
 
@@ -20,7 +22,7 @@ Funcionalidade: Login
 Cenário 1: Login com credenciais válidas
 ```
 Dado que estou na página de Login
-Quando preencho um e-mail cadastrado e uma senha válida
+Quando preencho o e-mail `USER_EMAIL` e a senha `USER_PASSWORD`
 E clico no botão Acessar
 Então devo ser autenticado com sucesso e redirecionado para a área logada
 ```
@@ -28,7 +30,7 @@ Então devo ser autenticado com sucesso e redirecionado para a área logada
 Cenário 2: Bloquear login com senha inválida
 ```
 Dado que estou na página de Login
-Quando preencho um e-mail cadastrado e uma senha inválida
+Quando preencho o e-mail `USER_EMAIL` e uma senha inválida (diferente da real)
 E clico no botão Acessar
 Então devo ver uma mensagem de erro de autenticação
 E não devo ser autenticado
@@ -84,8 +86,8 @@ E não devo ser autenticado
 Cenário 8: Remover espaços no e-mail (trim) antes de autenticar
 ```
 Dado que estou na página de Login
-Quando preencho um e-mail válido com espaços antes e depois
-E preencho uma senha válida
+Quando preencho o e-mail `  USER_EMAIL  ` (com espaços antes/depois)
+E preencho a senha `USER_PASSWORD`
 E clico no botão Acessar
 Então o sistema deve desconsiderar os espaços do e-mail
 E devo ser autenticado com sucesso
